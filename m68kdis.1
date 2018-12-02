@@ -1,0 +1,251 @@
+.TH M68KDIS 1 "July 5, 1994"
+.SH NAME
+m68kdis \- disassemble Motorola 68000 family object code
+.SH SYNOPSIS
+.LP
+m68kdis
+\fB[\fP\-\fIddd\fP\fB]\fP
+\fB[\fP\-a\ \fIfile\fP\fB]\fP
+\fB[\fP\-all[c]\fB]\fP
+\fB[\fP\-b\ \fIfile\fP\fB]\fP
+\fB[\fP\-bad\fB]\fP
+\fB[\fP\-f\ \fIfile\fP\fB]\fP
+\fB[\fP\-i\ \fIfile\fP\fB]\fP
+\fB[\fP\-j\ \fIfile\fP\fB]\fP
+\fB[\fP\-l\fB]\fP
+\fB[\fP\-lft\fB]\fP
+\fB[\fP\-n\ \fIfile\fP\fB]\fP
+\fB[\fP\-ns\ \fIfile\fP\fB]\fP
+\fB[\fP\-o\ \fIfile\fP\fB]\fP
+\fB[\fP\-odd\fB]\fP
+\fB[\fP\-pc\ \fIinitialpc\fP\fB]\fP
+\fB[\fP\-s\ \fIlength\fP\fB]\fP
+\fB[\fP\-slenp\ \fIlength\fP\fB]\fP
+\fB[\fP\-sp\fB]\fP
+\fIfile...\fP
+.SH DESCRIPTION
+.LP
+.I m68kdis
+is a disassembler for the Motorola 68000 family of cpu chips.
+The disassembler attempts to discern between the instruction
+and data portions of an object code file.
+.LP
+.I m68kdis
+produces output files much like
+.BR cc (1).
+When the \fB\-o\fP option is not used, file arguments that end in \.o
+have output filenames with \.s substituted for \.o; otherwise, \.s
+is simply appended.
+.LP
+The output consists of five columns:
+.IP \(bu
+program counter in hexadecimal
+.IP \(bu
+file contents with each byte displayed as two characters in hexadecimal
+.IP \(bu
+label (if any)
+.IP \(bu
+instruction name
+.IP \(bu
+operands (if any)
+.SH OPTIONS
+.LP
+.IP "\fI\-ddd\fP"
+Specifies the chip and coprocessors.
+Valid values for
+.I ddd
+are currently \fI000\fP, \fI008\fP, \fI010\fP, \fI020\fP,
+\fI030\fP, \fI851\fP, \fI881\fP, and \fI882\fP.
+This option may be repeated as appropriate.
+The default is \fI000\fP with no coprocessors.
+.IP "\-a\ \fIfile\fP"
+Specifies that
+.I file
+contains lines of the form ``\fIaXXX\ instruction\-string\fP'' which
+specify acceptable A-line opcodes.
+.I XXX
+is in hexadecimal.
+.IP \-all[c]
+Specifies that only one pass should be made,
+outputting the instruction (if any) at each word boundary.
+If the
+.I c
+is included, \fB\-i\fP, \fB\-j\fP, \fB\-n\fP and \fB\-ns\fP options
+are also processed,
+and another pass is made to ensure consistency between instructions.
+.IP "\-b\ \fIfile\fP"
+Specifies that
+.I file
+contains program counter values which are taken as
+locations in data to be output on a new line.
+The values should be one to a line, and of a form acceptable to
+.BR strtoul ()
+with base equal to 0.
+.IP \-bad
+Specifies that lines should be printed to standard error that specify
+which data caused a potential instruction to be made invalid.
+.IP "\-f\ \fIfile\fP"
+Specifies that
+.I file
+contains lines of the form ``\fIfXXX\ instruction\-string\fP'' which
+specify acceptable F-line opcodes.
+.I XXX
+is in hexadecimal.
+.IP "\-i\ \fIfile\fP"
+Specifies that
+.I file
+contains program counter values which are, if possible, to be taken as
+locations of valid instructions.
+The values should be one to a line, and of a form acceptable to
+.BR strtoul ()
+with base equal to 0.
+.IP "\-j\ \fIfile\fP"
+Specifies that
+.I file
+contains A-line and F-line opcodes which are unconditional jumps and
+therefore do not need to be followed by a valid instruction.
+The values should be one to a line, and of a form acceptable to
+.BR strtoul ()
+with base equal to 0.
+.IP \-l
+Specifies that output should be in lower-case.
+(Exception: Label references retain an upper-case ``L''.)
+.IP \-lft
+Specifies that instructions that ``fall through'' to a LINK instruction
+should be considered valid.
+By default, these instructions are considered invalid.
+.IP "\-n\ \fIfile\fP"
+Specifies that
+.I file
+contains program counter values which are to be taken as
+locations of data.
+The values should be one to a line, and of a form acceptable to
+.BR strtoul ()
+with base equal to 0.
+.IP "\-ns\ \fIfile\fP"
+Specifies that
+.I file
+contains program counter values which are to be taken as
+locations at which instructions do not begin.
+The words at these locations may, however, be extension words of instructions.
+The values should be one to a line, and of a form acceptable to
+.BR strtoul ()
+with base equal to 0.
+.IP "\-o\ \fIfile\fP"
+Specifies the output file.
+Only one file to be disassembled may be given when this option is used.
+.IP \-odd
+Specifies that instructions may begin at odd offsets.
+This can be useful when code to be disassembled is not stripped out of
+an object file.
+In particular, this option is often needed when disassembling
+an intact Macintosh resource fork.
+.IP "\-pc\ \fIinitialpc\fP"
+Specifies that
+.I initialpc
+be taken as the program counter value for the start of the object code.
+The default is 0.
+.IP "\-s\ \fIlength\fP"
+Specifies that data contain at least
+.I length
+consecutive printable characters to be output as a string.
+The minimum value for
+.I length
+is 2; the default is 5.
+.IP "\-slenp\ \fIlength\fP"
+Specifies that strings should print out no more than 
+.I length
+characters per output line.
+The minimum value for
+.I length
+is 10; the default is 30.
+.IP \-sp
+Specifies that register A7 should be output as SP, except in MOVEM instructions.
+.SH NOTES
+.LP
+The output is based on Motorola syntax.
+.LP
+Immediate values are sometimes also output in hexadecimal after an
+intervening
+'if t \fC!\fP.
+'if n !.
+.LP
+The following procedure is used to filter out the data from the instructions:
+.IP \(bu
+An initial pass is made determining at which file offsets potential
+instructions exist and the sizes of those instructions including operands.
+.IP \(bu
+File offsets specified by the user as being data are processed.
+.IP \(bu
+File offsets specified by the user as not starting instructions are processed.
+.IP \(bu
+File offsets specified by the user as being instructions are processed.
+.IP \(bu
+Potential instructions which reference data as instructions
+are changed to data.
+(This step is repeated after each of the remaining steps.)
+.IP \(bu
+LINK instructions which are referenced by BSR and JSR instructions are
+accepted as final instructions.
+(A final instruction is one that is included in the final output.)
+.IP \(bu
+Remaining LINK instructions are accepted as final instructions.
+.IP \(bu
+Branching and jumping instructions that reference final instructions
+and are not potential extension words of floating-point instructions
+are accepted as final instructions.
+.IP \(bu
+Remaining branching and jumping that are not extension words of
+potential floating-point instructions
+and returning instructions are accepted as final instructions.
+.IP \(bu
+Overlapping instructions are selected by minimizing the amount of data.
+.SH BUGS
+.LP
+.if t You will probably need 16-bit \fCshort\fPs and 32-bit \fCint\fPs.
+.if n You will probably need 16-bit \fIshort\fPs and 32-bit \fIint\fPs.
+.LP
+Since
+.I m68kdis
+uses the imperfect procedure given in the \fB\s-2NOTES\s+2\fP,
+errors may result in the instruction/data determination.
+When problems are suspected, the \fB\-bad\fP\fIX\fP option can be used
+to determine why instructions get interpreted as data.
+You can then use the \fB\-i\fP, \fB\-ns\fP, and \fB\-n\fP options,
+as appropriate.
+.LP
+Two unusual conditions checked for should be mentioned.
+Sometimes the decision to designate an instruction as a final instruction
+is later contradicted and the instruction is changed to data.
+In general, the instruction causing the contradiction should be
+regarded as data via the \fB\-ns\fP option.
+Also, sometimes it is reported that there is an ``overlap'' at a
+certain offset.
+This is because
+.I m68kdis
+is unsure if the best selection of two possible instructions
+which overlap each other was made.
+A quick inspection of the output at this offset should clear this up.
+Messages for these conditions are printed to standard error.
+.SH "SEE ALSO
+.IP 1.
+Motorola: \fIM68000 8/16/32 Bit Microprocessors:
+Programmer's Reference Manual\fP\&, 5th ed\., Prentice-Hall,
+Englewood Cliffs, NJ, 1986.
+.IP 2.
+Motorola: \fIM68030: Enhanced 32-Bit Microprocessor
+User's Manual\fP\&, 2nd ed\., Prentice-Hall,
+Englewood Cliffs, NJ, 1989.
+.IP 3.
+Motorola: \fIM68851: Paged Memory Management Unit
+User's Manual\fP\&, 2nd ed\., Prentice-Hall,
+Englewood Cliffs, NJ, 1989.
+.IP 4.
+Motorola: \fIM68881/MC68882: Floating-Point Coprocessor
+User's Manual\fP\&, 2nd ed\., Prentice-Hall,
+Englewood Cliffs, NJ, 1989.
+.SH AUTHOR
+.LP
+.nf
+Christopher G. Phillips
+Christopher_Phillips@pe.utexas.edu

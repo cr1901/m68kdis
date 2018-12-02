@@ -1,0 +1,13 @@
+#!/bin/sh
+
+grep '4e75' $* | grep -v RTS | grep '^[0-9a-f]*[ 	][ 	]*[0-9a-f]*4e75' > /tmp/$$
+grep '4e5e' $* | grep -v UNLK | grep '^[0-9a-f]*[ 	][ 	]*[0-9a-f]*4e5e' >> /tmp/$$
+grep '4e56' $* | grep -v LINK | grep '^[0-9a-f]*[ 	][ 	]*[0-9a-f]*4e56' >> /tmp/$$
+#grep '\(PC\)' $* >> /tmp/$$
+if [ -s /tmp/$$ ]
+then
+	echo "$0: possible problems"
+	echo "----------------------------------------------------------------"
+	sort -u /tmp/$$
+fi | more
+rm /tmp/$$

@@ -1,0 +1,55 @@
+#!/bin/sh -x
+
+#                 Author:  Christopher G. Phillips
+#              Copyright (C) 1994 All Rights Reserved
+#
+#                              NOTICE
+#
+# Permission to use, copy, modify, and distribute this software and
+# its documentation for any purpose and without fee is hereby granted
+# provided that the above copyright notice appear in all copies and
+# that both the copyright notice and this permission notice appear in
+# supporting documentation.
+#
+# The author makes no representations about the suitability of this
+# software for any purpose.  This software is provided ``as is''
+# without express or implied warranty.
+
+MACDIR=.
+
+if [ $# -ne 1 ]
+then
+	echo Usage: $0 file.rf
+	exit 1
+fi
+if [ ! -f $1.out ]
+then
+	$MACDIR/rf $1.rf > $1.out
+fi
+if [ ! -f $1.b ]
+then
+	$MACDIR/makeb.pl < $1.out > $1.b
+fi
+if [ ! -f $1.n ]
+then
+	$MACDIR/maken.pl < $1.out > $1.n
+fi
+args="-s 4 -sp -odd -a $MACDIR/mac.a -j $MACDIR/mac.j -b $1.b -n $1.n -030 -881 -lft"
+if [ -f $1.i ]
+then
+	args="$args -i $1.i"
+fi
+if [ -f $1.f ]
+then
+	args="$args -f $1.f"
+fi
+if [ -f $1.ns ]
+then
+	args="$args -ns $1.ns"
+fi
+$MACDIR/../m68kdis $args $1.rf 2> $1.rf.stderr
+$MACDIR/rftos.pl $1
+$MACDIR/../wierd $1.rf.s | more
+exit 0
+
+# whybad.pl < d2 | worst.pl $1.n | more

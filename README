@@ -1,0 +1,35 @@
+m68kdis - disassemble Motorola 68000 family object code
+
+m68kdis is a disassembler for the Motorola 68000 family of cpu chips
+(currently up to the 68030).  The disassembler attempts to discern
+between the instruction and data portions of an object code file.
+
+Make sure you use an ANSI C compiler with full prototypes.  Then type
+``make'' to build m68kdis.  If you want the Macintosh stuff, run make
+in the MAC directory also (you will need perl).
+
+There are two methods provided for debugging.  The script ``wierd'' can
+be used; it seeks to point out LINK, UNLK, and RTS instructions that
+ended up being data.  If you think these were so interpreted
+incorrectly, you can use the -bad (which writes to standard error) or
+-all options to help figure this out.
+
+MAC-SPECIFIC STUFF
+------------------
+There's a file for A-line instructions for the Macintosh (MAC/mac.a).
+It undoubtedly is not complete and/or accurate for your code.  Often
+code that uses an A-line instruction not currently known will result in
+problems spotted by ``wierd''.  ``mac.0189'' is the file to add new
+instructions to (the lines must match /^a[0189]/).  ``mac.odd'' is for
+instructions that contradict mac.0189.  After editing, rerun make.
+
+Four scripts, ``makes'', ``rftos.pl'', ``makeb.pl'', and ``maken.pl'',
+and the C program ``rf'' are provided to make it easier to format the
+output for a resource fork in a more Mac-friendly fashion.  A resource
+fork should be named <stem>.rf and ``makes'' should be called with the
+lone argument <stem>.
+
+Suggestions and questions welcome.
+
+Chris
+Christopher_Phillips@pe.utexas.edu
