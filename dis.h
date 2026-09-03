@@ -276,7 +276,7 @@ extern int	nextword(word_t *);
 extern long	getval(int, int *);
 extern char	*Areg(int);
 extern void	Areg2(char [], char, int);
-extern int	fponit(u32bit_t *, int, char *);
+extern int	fpoint(u32bit_t *, int, char *);
 extern int	getea(char *, word_t, word_t, int);
 extern void	instprint(int, const char *, ...);
 extern char	*regbyte(char *, unsigned char, char *, int);
